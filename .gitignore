@@ -7,7 +7,7 @@ __pycache__/
 
 outputs/
 plots/
-cashe/
+cache/
 
 # C extensions
 *.so

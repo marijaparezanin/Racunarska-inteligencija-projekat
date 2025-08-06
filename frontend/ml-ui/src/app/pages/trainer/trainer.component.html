@@ -33,7 +33,10 @@
       </a>.
     </p>
 
-    <div *ngIf="trainingMessage" class="success-message">{{ trainingMessage }}</div>
+    <div *ngIf="trainingMessage" class="success-message">
+      <span class="spinner" *ngIf="isTraining"></span>
+      {{ trainingMessage }}
+    </div>
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <section *ngIf="trainingResult" class="results">
