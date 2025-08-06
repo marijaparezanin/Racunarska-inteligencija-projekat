@@ -3,22 +3,25 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+from machine_learning.consts import DIABETES_INDICATORS_DATASET, DIABETES_INDICATORS_TARGET, DIABETES_INDICATORS_TARGET_TYPE, DEFAULT_NUMERIC_IMPUTER_STRATEGY, DEFAULT_CATEGORY_IMPUTER_STRATEGY
 
 ordinal_mappings = {
     'Age': {
-        '18 to 24': 1,
-        '25 to 29': 2,
-        '30 to 34': 3,
-        '35 to 39': 4,
-        '40 to 44': 5,
-        '45 to 49': 6,
-        '50 to 54': 7,
-        '55 to 59': 8,
-        '60 to 64': 9,
-        '65 to 69': 10,
-        '70 to 74': 11,
-        '75 to 79': 12,
-        '80 or older': 13
+        '0 to 10': 0,
+        '11 to 27': 1,
+        '18 to 24': 2,
+        '25 to 29': 3,
+        '30 to 34': 4,
+        '35 to 39': 5,
+        '40 to 44': 6,
+        '45 to 49': 7,
+        '50 to 54': 8,
+        '55 to 59': 9,
+        '60 to 64': 10,
+        '65 to 69': 11,
+        '70 to 74': 12,
+        '75 to 79': 13,
+        '80 or older': 14
     },
     'GenHlth': {
         'Poor': 1,
@@ -38,7 +41,7 @@ ordinal_mappings = {
 }
 
 def load_diabetes_dataset(split='train'):
-    dataset_path = f"hf://datasets/Bena345/cdc-diabetes-health-indicators/{split}.parquet"
+    dataset_path = DIABETES_INDICATORS_DATASET + split + ".parquet"
     df = pd.read_parquet(dataset_path)
     return df
 
@@ -46,7 +49,7 @@ def conditional_map(df, column, mapping):
     if df[column].dtype == object or not pd.api.types.is_numeric_dtype(df[column]):
         df[column] = df[column].map(mapping)
 
-def preprocess_data(df, target='Diabetes_binary', target_type='nominal', imputer_strategy='median'):
+def preprocess_data(df, target=DIABETES_INDICATORS_TARGET, target_type=DIABETES_INDICATORS_TARGET_TYPE):
     #df.head(20).to_csv("beginner.csv", index=False)
 
     conditional_map(df, 'Age', ordinal_mappings['Age'])
@@ -77,8 +80,8 @@ def preprocess_data(df, target='Diabetes_binary', target_type='nominal', imputer
 
 
     # Imputers
-    num_imputer = SimpleImputer(strategy=imputer_strategy)
-    cat_imputer = SimpleImputer(strategy='most_frequent')
+    num_imputer = SimpleImputer(strategy=DEFAULT_NUMERIC_IMPUTER_STRATEGY)
+    cat_imputer = SimpleImputer(strategy=DEFAULT_CATEGORY_IMPUTER_STRATEGY)
 
     # Pipelines
     numeric_pipeline = Pipeline([

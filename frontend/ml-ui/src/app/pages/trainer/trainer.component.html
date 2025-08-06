@@ -1,0 +1,77 @@
+<div class="container">
+  <aside class="sidebar">
+    <h2>Classification Model Configuration</h2>
+
+    <label for="clf-model">Select Model</label>
+    <select id="clf-model" [(ngModel)]="model_type" class="styled-select">
+      <option *ngFor="let model of clfModels" [value]="model">{{ model }}</option>
+    </select>
+
+    <label for="database-select">Select Dataset</label>
+    <select id="database-select" [(ngModel)]="selectedDatabaseClf" class="styled-select">
+      <option *ngFor="let db of databases" [value]="db">{{ db }}</option>
+    </select>
+
+    <button (click)="train()" [disabled]="isTraining" class="styled-button">Train Classification Model</button>
+
+  </aside>
+
+  <main class="main-content">
+    <h1 class="main-header">Machine Learning Model Training</h1>
+
+    <p class="info-text">
+      The models can be trained based on the
+      <a href="https://huggingface.co/datasets/Bena345/cdc-diabetes-health-indicators" target="_blank" rel="noopener">
+        CDC Diabetes Health Indicators Dataset
+      </a>, referred as "Indicators Dataset" or <a href="https://huggingface.co/datasets/marianeft/diabetes_prediction_dataset" target="_blank" rel="noopener">
+      Diabetes Prediction Dataset
+    </a>, referred as 'Prediction Dataset', both
+      available on Hugging Face.<br />
+      The source code for this application can be found on the
+      <a href="https://github.com/marijaparezanin/Racunarska-inteligencija-projekat" target="_blank" rel="noopener">
+        GitHub repository
+      </a>.
+    </p>
+
+    <div *ngIf="trainingMessage" class="success-message">{{ trainingMessage }}</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <section *ngIf="trainingResult" class="results">
+      <!-- Classification Metrics -->
+      <div *ngIf="trainingResult.accuracy !== undefined" class="metrics">
+        <h3>Classification Results</h3>
+        <p><strong>Accuracy:</strong> {{ trainingResult.accuracy | number:'1.4-4' }}</p>
+
+        <div class="plots" *ngFor="let plot of [
+            { label: 'Bar Plot', key: 'bar_plot_path' },
+            { label: 'Log Loss Plot', key: 'log_loss_plot_path' },
+            { label: 'Training vs Validation Loss Plot', key: 'training_validation_loss_path' }
+          ]">
+          <div *ngIf="trainingResult[plot.key]">
+            <h4>{{ plot.label }}</h4>
+            <img [src]="trainingResult[plot.key]" alt="{{ plot.label }}" />
+            <button (click)="downloadImage(trainingResult[plot.key])" class="styled-button small-button">Download {{ plot.label }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regression Metrics -->
+      <div *ngIf="trainingResult.r2_score !== undefined && trainingResult.mae !== undefined" class="metrics">
+        <h3>Regression Results</h3>
+        <p><strong>R² Score:</strong> {{ trainingResult.r2_score | number:'1.4-4' }}</p>
+        <p><strong>Mean Absolute Error:</strong> {{ trainingResult.mae | number:'1.4-4' }}</p>
+
+        <div *ngIf="trainingResult.best_params">
+          <h4>Best Hyperparameters</h4>
+          <pre>{{ trainingResult.best_params | json }}</pre>
+        </div>
+
+        <div *ngIf="trainingResult.actual_vs_pred_path">
+          <h4>Actual vs Predicted BMI</h4>
+          <img [src]="trainingResult.actual_vs_pred_path" alt="Actual vs Predicted BMI" />
+          <button (click)="downloadImage(trainingResult.actual_vs_pred_path)" class="styled-button small-button">Download Plot</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

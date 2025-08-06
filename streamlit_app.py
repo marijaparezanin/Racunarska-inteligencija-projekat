@@ -104,8 +104,7 @@ def send_training_request(payload, display_label):
 if train_clf:
     payload = {
         "model": model_mapping[model_type],
-        "imputer_strategy": imputer_strategy,
-        "model_category": "classification"
+        "dataset": 'Diabetes Indicators',
     }
     label = f"{model_type} with {imputer_strategy} imputation"
     send_training_request(payload, label)
@@ -113,8 +112,7 @@ if train_clf:
 if train_reg:
     payload = {
         "model": model_mapping[reg_model_type],
-        "imputer_strategy": reg_imputer_strategy,
-        "model_category": "regression"
+        "dataset": 'Diabetes Indicators',
     }
     label = f"{reg_model_type} with {reg_imputer_strategy} imputation"
     send_training_request(payload, label)
