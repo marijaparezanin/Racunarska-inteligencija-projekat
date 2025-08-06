@@ -14,6 +14,7 @@ interface TrainingResult {
   training_validation_loss_path?: string;
   actual_vs_pred_path?: string;
   error?: string;
+  duration: string;
   [key: string]: any;
 }
 
@@ -61,12 +62,10 @@ export class TrainerComponent {
 
   private async sendTrainingRequest(payload: any, label: string) {
     try {
-      const start = performance.now();
       const data = await this.mlApi.trainModel(payload).toPromise();
-      const end = performance.now();
       this.trainingResult = data as TrainingResult;
       this.isTraining = false;
-      this.trainingMessage = `Training ${label} completed in ${((end - start) / 1000).toFixed(2)} seconds.`;
+      this.trainingMessage = `Training ${label} completed in ${this.trainingResult.duration} seconds.`;
       this.errorMessage = '';
     } catch (error: any) {
       this.isTraining = false;
@@ -86,4 +85,9 @@ export class TrainerComponent {
   downloadImage(url: string) {
     window.open(url, '_blank');
   }
+
+  getFilename(path: string): string {
+    return path.split('/').pop() || path;
+  }
+
 }

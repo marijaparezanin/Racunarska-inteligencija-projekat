@@ -45,7 +45,7 @@ def load_diabetes_dataset(split='train'):
     return df
 
 def preprocess_data(df, target=DIABETES_PREDICTION_TARGET, target_type=DIABETES_PREDICTION_TARGET_TYPE):
-    #df.head(20).to_csv("beginner.csv", index=False)
+    df.head(20).to_csv("beginner.csv", index=False)
 
     #Transform the words into their numerical equivalents (only for ordinals)
     df['age'] = df['age'].apply(map_numeric_age_to_group)

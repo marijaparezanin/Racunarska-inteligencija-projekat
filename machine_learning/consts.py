@@ -2,7 +2,7 @@ DIABETES_INDICATORS_DATASET = "hf://datasets/Bena345/cdc-diabetes-health-indicat
 DIABETES_INDICATORS_TARGET = "Diabetes_binary"
 DIABETES_INDICATORS_TARGET_TYPE = "nominal"
 
-DIABETES_PREDICTION_DATASET = "hf://datasets/Bena345/cdc-diabetes-health-indicators/"
+DIABETES_PREDICTION_DATASET = "hf://datasets/marianeft/diabetes_prediction_dataset/"
 DIABETES_PREDICTION_TARGET = "diabetes"
 DIABETES_PREDICTION_TARGET_TYPE = "nominal"
 
