@@ -33,7 +33,7 @@
       </a>.
     </p>
 
-    <div *ngIf="trainingMessage" class="success-message">
+    <div *ngIf="trainingMessage" class="success-message" [style.color]="isTraining ? '#2e7d7d' : '#3f51b5'">
       <span class="spinner" *ngIf="isTraining"></span>
       {{ trainingMessage }}
     </div>
@@ -44,6 +44,89 @@
       <div *ngIf="trainingResult.accuracy !== undefined" class="metrics">
         <p><strong>Accuracy:</strong></p>
         <h3 class="accuracy-value">{{ trainingResult.accuracy | number:'1.4-4' }}</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div *ngIf="trainingResult?.classification_report" class="classification-report">
+          <h3>Classification Report</h3>
+          <table>
+            <thead>
+            <tr>
+              <th>Class</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1-Score</th>
+              <th>Support</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let cls of classLabels">
+              <td>{{ cls }}</td>
+              <td>{{ trainingResult.classification_report[cls]?.precision | number:'1.2-2' }}</td>
+              <td>{{ trainingResult.classification_report[cls]?.recall | number:'1.2-2' }}</td>
+              <td>{{ trainingResult.classification_report[cls]?.['f1-score'] | number:'1.2-2' }}</td>
+              <td>{{ trainingResult.classification_report[cls]?.support }}</td>
+            </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+
+
+        <div class="report-explanation">
+          <h4>What these metrics mean:</h4>
+          <ul>
+            <li><strong>Precision</strong> is the proportion of correct positives out of all positive predictions made. High precision means few false positives.</li>
+            <li><strong>Recall</strong> is the proportion of actual positives that were correctly identified. High recall means few false negatives.</li>
+            <li><strong>F1-Score</strong> is the harmonic mean of precision and recall. It balances both metrics.</li>
+            <li><strong>Support</strong> indicates the number of true instances for each class in the dataset.</li>
+            <li><strong>Macro Avg</strong> averages the metrics for each class equally, without considering support.</li>
+            <li><strong>Weighted Avg</strong> averages the metrics while taking class support into account, giving more weight to frequent classes.</li>
+            <li><strong>Accuracy</strong> is the overall correctness of the model, shown above the table.</li>
+          </ul>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div class="plots" *ngFor="let plot of [
             { label: 'Bar Plot', key: 'bar_plot_path' },
             { label: 'Log Loss Plot', key: 'log_loss_plot_path' },

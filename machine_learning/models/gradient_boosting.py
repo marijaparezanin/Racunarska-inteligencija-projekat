@@ -34,7 +34,7 @@ def train_and_evaluate_best_gb(X, y):
     y_pred = (y_proba > threshold).astype(int)
 
     acc = accuracy_score(y_val, y_pred)
-    report = classification_report(y_val, y_pred, output_dict=False)
+    report = classification_report(y_val, y_pred, output_dict=True)
     logloss = log_loss(y_val, best_model.predict_proba(X_val))
 
     # Generate plots

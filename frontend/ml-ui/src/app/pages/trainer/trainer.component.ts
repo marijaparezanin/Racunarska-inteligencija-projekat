@@ -15,7 +15,9 @@ interface TrainingResult {
   actual_vs_pred_path?: string;
   error?: string;
   duration: string;
+  classification_report: any;
   [key: string]: any;
+
 }
 
 @Component({
@@ -29,6 +31,9 @@ export class TrainerComponent {
   // Sidebar options
   clfModels = ['Random Forest', 'K Nearest Neighbors', 'Gradient Boosting'];
   databases = ['Diabetes Indicators', 'Diabetes Prediction'];
+
+  classLabels: string[] = ['0', '1', 'macro avg', 'weighted avg'];
+
 
   // Selected values
   model_type = this.clfModels[0];
