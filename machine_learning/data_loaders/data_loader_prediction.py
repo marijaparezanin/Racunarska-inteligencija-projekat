@@ -39,13 +39,22 @@ def map_numeric_age_to_group(age):
         return 14
 
 
+from huggingface_hub import login
+
+login(token="HUGGING_FACE_TOKEN") 
+
+from datasets import load_dataset
+
+# Login with your token once per session
+
 def load_diabetes_dataset(split='train'):
-    dataset_path =DIABETES_PREDICTION_DATASET + split + ".parquet"
-    df = pd.read_parquet(dataset_path)
+    dataset = load_dataset("marianeft/diabetes_prediction_dataset", split=split)
+    df = dataset.to_pandas()
     return df
 
+
 def preprocess_data(df, target=DIABETES_PREDICTION_TARGET, target_type=DIABETES_PREDICTION_TARGET_TYPE):
-    df.head(20).to_csv("beginner.csv", index=False)
+    #df.head(20).to_csv("beginner.csv", index=False)
 
     #Transform the words into their numerical equivalents (only for ordinals)
     df['age'] = df['age'].apply(map_numeric_age_to_group)

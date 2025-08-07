@@ -12,12 +12,12 @@
       <option *ngFor="let db of databases" [value]="db">{{ db }}</option>
     </select>
 
-    <button (click)="train()" [disabled]="isTraining" class="styled-button">Train Classification Model</button>
+    <button (click)="train()" [disabled]="isTraining" class="styled-button">Train Model</button>
 
   </aside>
 
   <main class="main-content">
-    <h1 class="main-header">Machine Learning Model Training</h1>
+    <h1 class="main-header">Diabetes Classification Model Trainer</h1>
 
     <p class="info-text">
       The models can be trained based on the
