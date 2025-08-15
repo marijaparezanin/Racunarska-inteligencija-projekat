@@ -4,10 +4,12 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
-from machine_learning.models.utils import bar_plot, plot_log_loss, plot_training_validation_loss
 from sklearn.utils.class_weight import compute_class_weight
+from machine_learning.consts import RANDOM_FOREST_INDICATORS_MAX_DEPTH, RANDOM_FOREST_INDICATORS_N_ESTIMATORS, RANDOM_FOREST_INDICATORS_MIN_SAMPLES_SPLIT, RANDOM_FOREST_PREDICTION_MAX_DEPTH, RANDOM_FOREST_PREDICTION_N_ESTIMATORS, RANDOM_FOREST_PREDICTION_MIN_SAMPLES_SPLIT
+from machine_learning.models.utils import bar_plot, plot_log_loss, plot_training_validation_loss
 
-def train_and_evaluate_best_rf(X, y):
+
+def train_and_evaluate_best_rf(X, y, dataset_name):
     # Split the dataset
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
@@ -22,15 +24,24 @@ def train_and_evaluate_best_rf(X, y):
     # Convert to dictionary {class_label: weight}
     class_weight_dict = dict(zip(np.unique(y_train), class_weights_array))
 
+    if dataset_name == "INDICATORS":
+        max_depth = RANDOM_FOREST_INDICATORS_MAX_DEPTH
+        min_samples_split = RANDOM_FOREST_INDICATORS_MIN_SAMPLES_SPLIT
+        n_estimators = RANDOM_FOREST_INDICATORS_N_ESTIMATORS
+    else:
+        max_depth = RANDOM_FOREST_PREDICTION_MAX_DEPTH
+        min_samples_split = RANDOM_FOREST_PREDICTION_MIN_SAMPLES_SPLIT
+        n_estimators = RANDOM_FOREST_PREDICTION_N_ESTIMATORS
 
     # Train a Random Forest with monitoring
     model = RandomForestClassifier(
         class_weight=class_weight_dict,
-        max_depth=10,
-        min_samples_split=10,
-        n_estimators=100,
+        max_depth=max_depth,
+        min_samples_split=min_samples_split,
+        n_estimators=n_estimators,
         random_state=42,
     )
+
 
     model.fit(X_train, y_train)
 

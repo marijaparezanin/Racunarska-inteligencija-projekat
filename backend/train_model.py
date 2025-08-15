@@ -18,17 +18,20 @@ def train_model(model_type, dataset):
     if model_type not in ['rf', 'knn', 'dt', 'gb', 'lr']:
         return {"error": "Invalid model type. Use 'rf', 'knn', 'gb' or 'lr'."}, 400
 
+    dataset_name = ""
     if dataset == "Diabetes Indicators":
         df = load_indicators_dataset()
+        dataset_name = "INDICATORS"
         X, y, _ = preprocess_indicators_data(df)
     elif dataset == "Diabetes Prediction":
         df = load_prediction_dataset()
+        dataset_name = "PREDICTION"
         X, y, _ = preprocess_prediction_data(df)
 
     if model_type == "rf":
-        result = train_and_evaluate_best_rf(X, y)
+        result = train_and_evaluate_best_rf(X, y, dataset_name)
     elif model_type == "knn":
-        result = train_and_evaluate_best_knn(X, y)
+        result = train_and_evaluate_best_knn(X, y, dataset_name)
     elif model_type == "gb":
         result = train_and_evaluate_best_gb(X, y)
 

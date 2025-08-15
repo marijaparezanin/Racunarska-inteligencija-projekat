@@ -4,15 +4,21 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score, recall_score
 from machine_learning.models.utils import bar_plot, plot_knn_train_test_loss
+from machine_learning.consts import KNN_INDICATORS_NEIGHBORS, KNN_INDICATORS_THRESH, KNN_PREDICTION_NEIGHBORS, KNN_PREDICTION_THRESH
 
-def train_and_evaluate_best_knn(X, y, neighbor_range=[3, 5, 7, 9], threshold_range=[0.2, 0.3, 0.4, 0.5]):
+def train_and_evaluate_best_knn(X, y, dataset_name, neighbor_range=[3, 5, 7, 9], threshold_range=[0.2, 0.3, 0.4, 0.5]):
     # Split the dataset
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    neighbors = 5
-    thresh = 0.2
+    if dataset_name == "INDICATORS":
+        neighbors = KNN_INDICATORS_NEIGHBORS
+        thresh = KNN_INDICATORS_THRESH
+    else:
+        neighbors = KNN_PREDICTION_NEIGHBORS
+        thresh = KNN_PREDICTION_THRESH
+
     model = KNeighborsClassifier(n_neighbors=neighbors)
     model.fit(X_train, y_train)
     y_proba = model.predict_proba(X_test)[:, 1]
