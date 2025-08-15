@@ -64,9 +64,9 @@ def preprocess_data(df, target=DIABETES_INDICATORS_TARGET, target_type=DIABETES_
     y = df[target]
 
     # Manually define column types
-    ordinal_cols = ['PhysHlth', 'Age', 'GenHlth', 'MentHlth', 'Income']
-    numeric_cols = ['BMI']
-    nominal_cols = ['Diabetes_binary', 'HighBP', "HighChol", 'CholCheck', 'Smoker', 'Stroke', 'HeartDiseaseorAttack', 'Fruits', 'Veggies', 'HvyAlcoholConsump','AnyHealthcare', 'NoDocbcCost', 'PhysActivity', 'DiffWalk', 'Sex']
+    ordinal_cols = ['PhysHlth', 'Age', 'GenHlth', 'Income', 'PhysActivity']
+    numeric_cols = ['BMI', 'MentHlth']
+    nominal_cols = ['Diabetes_binary', 'HighBP', "HighChol", 'CholCheck', 'Smoker', 'Stroke', 'HeartDiseaseorAttack', 'Fruits', 'Veggies', 'HvyAlcoholConsump','AnyHealthcare', 'NoDocbcCost', 'DiffWalk', 'Sex']
 
     if target_type == 'ordinal':
         if target in ordinal_cols:
