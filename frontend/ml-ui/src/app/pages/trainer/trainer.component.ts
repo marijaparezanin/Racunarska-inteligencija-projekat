@@ -88,8 +88,22 @@ export class TrainerComponent {
   }
 
   downloadImage(url: string) {
-    window.open(url, '_blank');
+    fetch(url)
+      .then(res => res.blob())
+      .then(blob => {
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = url.split('/').pop() || 'image.png';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(blobUrl);
+      })
+      .catch(err => console.error('Download failed', err));
   }
+
+
 
   getFilename(path: string): string {
     return path.split('/').pop() || path;

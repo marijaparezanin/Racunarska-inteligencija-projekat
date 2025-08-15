@@ -135,7 +135,7 @@
           <div *ngIf="trainingResult[plot.key]">
             <p><strong>{{ plot.label }}</strong></p>
             <img [src]="'http://localhost:5000/plot/' + getFilename(trainingResult[plot.key])" alt="{{ plot.label }}" />
-            <button (click)="downloadImage('/plot/' + getFilename(trainingResult[plot.key]))" class="styled-button small-button">
+            <button (click)="downloadImage('http://localhost:5000/plot/' + getFilename(trainingResult[plot.key]))" class="styled-button small-button">
               Download {{ plot.label }}
             </button>
 
