@@ -10,3 +10,4 @@ huggingface_hub
 imbalanced-learn>=0.10
 flask-cors
 datasets
+torch

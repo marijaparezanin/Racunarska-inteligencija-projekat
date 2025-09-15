@@ -19,8 +19,8 @@ def train():
         model_type = request.json.get("model")
         dataset = request.json.get("dataset")
 
-        if model_type not in ["rf", "knn", "gb"]:
-            return jsonify({"error": "Invalid model type. Use 'rf', 'knn' or 'gb'."}), 400
+        if model_type not in ["rf", "knn", "gb", "mlp", "ff"]:
+            return jsonify({"error": "Invalid model type. Use 'rf', 'mlp', 'knn', 'ff' or 'gb'."}), 400
 
 
         if dataset not in ["Diabetes Indicators", "Diabetes Prediction"]:
@@ -59,7 +59,10 @@ def train():
         }
         if model_type == "rf":
             response["log_loss_plot_path"] = result.get("log_loss_plot_path")
-
+        if model_type == "mlp" or model_type == "ff":
+            response["loss_curve_path"] = result.get("loss_curve_path")
+            response["roc_curve_path"] = result.get("roc_curve_path")
+            response["conf_matrix_path"] = result.get("conf_matrix_path")
         # Save to cache
         with open(cache_path, "w") as f:
             json.dump(response, f, indent=2)

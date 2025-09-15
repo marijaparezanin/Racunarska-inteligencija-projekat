@@ -13,7 +13,6 @@
     </select>
 
     <button (click)="train()" [disabled]="isTraining" class="styled-button">Train Model</button>
-
   </aside>
 
   <main class="main-content">
@@ -23,20 +22,17 @@
       The models can be trained based on the
       <a href="https://huggingface.co/datasets/Bena345/cdc-diabetes-health-indicators" target="_blank" rel="noopener">
         CDC Diabetes Health Indicators Dataset
-      </a>, referred as "Indicators Dataset" or <a href="https://huggingface.co/datasets/marianeft/diabetes_prediction_dataset" target="_blank" rel="noopener">
-      Diabetes Prediction Dataset
-    </a>, referred as 'Prediction Dataset', both
-      available on Hugging Face.<br />
-      The source code for this application can be found on the
-      <a href="https://github.com/marijaparezanin/Racunarska-inteligencija-projekat" target="_blank" rel="noopener">
-        GitHub repository
-      </a>.
+      </a>, referred as "Indicators Dataset" or
+      <a href="https://huggingface.co/datasets/marianeft/diabetes_prediction_dataset" target="_blank" rel="noopener">
+        Diabetes Prediction Dataset
+      </a>, referred as "Prediction Dataset".
     </p>
 
     <div *ngIf="trainingMessage" class="success-message" [style.color]="isTraining ? '#2e7d7d' : '#3f51b5'">
       <span class="spinner" *ngIf="isTraining"></span>
       {{ trainingMessage }}
     </div>
+
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <section *ngIf="trainingResult" class="results">
@@ -45,27 +41,8 @@
         <p><strong>Accuracy:</strong></p>
         <h3 class="accuracy-value">{{ trainingResult.accuracy | number:'1.4-4' }}</h3>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div *ngIf="trainingResult?.classification_report" class="classification-report">
+        <!-- Classification Report -->
+        <div *ngIf="trainingResult.classification_report" class="classification-report">
           <h3>Classification Report</h3>
           <table>
             <thead>
@@ -87,51 +64,21 @@
             </tr>
             </tbody>
           </table>
-
-
         </div>
 
-
         <div class="report-explanation">
-          <h4>What these metrics mean:</h4>
+          <h4>Metrics Explanation:</h4>
           <ul>
-            <li><strong>Precision</strong> is the proportion of correct positives out of all positive predictions made. High precision means few false positives.</li>
-            <li><strong>Recall</strong> is the proportion of actual positives that were correctly identified. High recall means few false negatives.</li>
-            <li><strong>F1-Score</strong> is the harmonic mean of precision and recall. It balances both metrics.</li>
-            <li><strong>Support</strong> indicates the number of true instances for each class in the dataset.</li>
-            <li><strong>Macro Avg</strong> averages the metrics for each class equally, without considering support.</li>
-            <li><strong>Weighted Avg</strong> averages the metrics while taking class support into account, giving more weight to frequent classes.</li>
-            <li><strong>Accuracy</strong> is the overall correctness of the model, shown above the table.</li>
+            <li><strong>Precision</strong>: Correct positives out of all positive predictions.</li>
+            <li><strong>Recall</strong>: Actual positives correctly identified.</li>
+            <li><strong>F1-Score</strong>: Harmonic mean of precision and recall.</li>
+            <li><strong>Support</strong>: Number of true instances for each class.</li>
+            <li><strong>Accuracy</strong>: Overall correctness.</li>
           </ul>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="plots" *ngFor="let plot of [
-            { label: 'Bar Plot', key: 'bar_plot_path' },
-            { label: 'Log Loss Plot', key: 'log_loss_plot_path' },
-            { label: 'Training vs Validation Loss Plot', key: 'training_validation_loss_path' }
-          ]">
+        <!-- Dynamic Plots -->
+        <div class="plots" *ngFor="let plot of getPlotKeys()">
           <div *ngIf="trainingResult[plot.key]">
             <p><strong>{{ plot.label }}</strong></p>
             <img [src]="'http://localhost:5000/plot/' + getFilename(trainingResult[plot.key])" alt="{{ plot.label }}" />
@@ -139,8 +86,43 @@
               Download {{ plot.label }}
             </button>
 
+            <!-- Plot Explanation -->
+            <div class="report-explanation">
+              <h4>Plot Explanation:</h4>
+              <ul>
+                <li *ngIf="plot.key === 'bar_plot_path'">
+                  <strong>Bar Plot (Class Distribution & Predictions)</strong>:
+                  Shows how many samples belong to each class, and how many of them were predicted correctly or incorrectly.
+                  Useful for visually inspecting whether the model is biased toward a certain class or struggles with imbalanced datasets.
+                </li>
+                <li *ngIf="plot.key === 'training_validation_loss_path'">
+                  <strong>Training vs Validation Loss</strong>:
+                  Displays how the model’s loss changes over epochs for both training and validation sets.
+                  A decreasing training loss with a stable or decreasing validation loss indicates learning progress.
+                  If validation loss diverges upward while training loss decreases, the model may be overfitting.
+                </li>
+                <li *ngIf="plot.key === 'conf_matrix_path'">
+                  <strong>Confusion Matrix</strong>:
+                  Provides a breakdown of predictions vs. actual labels. Each cell shows how many samples of a true class were predicted as another class.
+                  Helps identify specific misclassifications (e.g., false negatives vs false positives).
+                </li>
+                <li *ngIf="plot.key === 'roc_curve_path'">
+                  <strong>ROC Curve</strong>:
+                  Plots the true positive rate (sensitivity) against the false positive rate across different thresholds.
+                  A curve closer to the top-left indicates stronger performance. The area under the curve (AUC) summarizes this performance.
+                </li>
+                <li *ngIf="plot.key === 'loss_curve_path'">
+                  <strong>MLP Loss Curve</strong>:
+                  This plot shows how the training loss of the Multilayer Perceptron changes over epochs.
+                  Each point represents the loss at the end of an epoch. A steadily decreasing loss indicates that the model is learning effectively.
+                  If the loss plateaus or starts increasing, it may signal underfitting, overfitting, or the need for adjustments in learning rate, regularization (alpha), or network architecture.
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+
+
       </div>
     </section>
   </main>

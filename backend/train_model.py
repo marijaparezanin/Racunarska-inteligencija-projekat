@@ -3,20 +3,22 @@ from machine_learning.data_loaders.data_loader_prediction import load_diabetes_d
 from machine_learning.models.random_forest import train_and_evaluate_best_rf
 from machine_learning.models.knn import train_and_evaluate_best_knn
 from machine_learning.models.gradient_boosting import train_and_evaluate_best_gb
+from machine_learning.models.mlp import train_and_evaluate_best_mlp
+from machine_learning.models.feedforward import train_and_evaluate_torch_nn
 
 def train_model(model_type, dataset):
     """
     Train a machine learning model based on the specified type and dataset.
     
     Args:
-        model_type (str): The type of model to train ('rf', 'knn', 'gb', 'lr').
+        model_type (str): The type of model to train ('rf', 'knn', 'gb', 'lr', 'mlp').
         dataset (str): The dataset to use ('Diabetes Indicators' for indicators, 'Diabetes Prediction' for prediction).
     
     Returns:
         dict: A dictionary containing the trained model and evaluation metrics.
     """
-    if model_type not in ['rf', 'knn', 'dt', 'gb', 'lr']:
-        return {"error": "Invalid model type. Use 'rf', 'knn', 'gb' or 'lr'."}, 400
+    if model_type not in ['rf', 'knn', 'dt', 'gb', 'lr', 'mlp']:
+        return {"error": "Invalid model type. Use 'rf', 'knn', 'mlp', 'gb' or 'lr'."}, 400
 
     dataset_name = ""
     if dataset == "Diabetes Indicators":
@@ -34,5 +36,9 @@ def train_model(model_type, dataset):
         result = train_and_evaluate_best_knn(X, y, dataset_name)
     elif model_type == "gb":
         result = train_and_evaluate_best_gb(X, y)
+    elif model_type == "mlp":
+        result = train_and_evaluate_best_mlp(X, y, dataset_name)
+    elif model_type == "ff":
+        result = train_and_evaluate_torch_nn(X, y, dataset_name)
 
     return result

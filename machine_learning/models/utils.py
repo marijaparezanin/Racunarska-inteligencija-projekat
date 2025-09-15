@@ -144,3 +144,166 @@ def plot_knn_train_test_loss(X_train, y_train, X_test, y_test):
     plt.close()
 
     return file_path
+
+
+import matplotlib.pyplot as plt
+import uuid
+
+def plot_mlp_train_val_loss(model):
+    plot_path = f"outputs/mlp_loss_{uuid.uuid4().hex}.png"
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(model.loss_curve_, label="Training Loss")
+    if hasattr(model, "validation_scores_"):
+        plt.plot(model.validation_scores_, label="Validation Score")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss/Score")
+    plt.title("MLP Training & Validation")
+    plt.legend()
+    plt.savefig(plot_path)
+    plt.close()
+
+    return plot_path
+
+def plot_mlp_loss(model, model_name="mlp"):
+    path = f"outputs/mlp_loss_{model_name}_{uuid.uuid4().hex}.png"
+    plt.figure(figsize=(8, 6))
+    plt.plot(model.loss_curve_, label="Training Loss", color="blue")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.title(f"MLP Training Loss - {model_name}")
+    plt.legend()
+    plt.savefig(path)
+    plt.close()
+    return path
+
+
+from sklearn.metrics import roc_curve, auc
+
+def plot_mlp_roc(y_test, y_proba, model_name="mlp"):
+    fpr, tpr, _ = roc_curve(y_test, y_proba)
+    roc_auc = auc(fpr, tpr)
+
+    path = f"outputs/mlp_roc_{model_name}_{uuid.uuid4().hex}.png"
+
+    plt.figure()
+    plt.plot(fpr, tpr, color="darkorange", lw=2, label=f"AUC = {roc_auc:.2f}")
+    plt.plot([0, 1], [0, 1], color="navy", lw=2, linestyle="--")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title(f"MLP ROC Curve - {model_name}")
+    plt.legend(loc="lower right")
+    plt.savefig(path)
+    plt.close()
+
+    return path
+
+
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+def plot_mlp_confusion_matrix(y_test, y_pred, model_name="mlp"):
+    cm = confusion_matrix(y_test, y_pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot(cmap="Blues", values_format="d")
+
+    path = f"outputs/mlp_confusion_{model_name}_{uuid.uuid4().hex}.png"
+    plt.title(f"Confusion Matrix - {model_name}")
+    plt.savefig(path)
+    plt.close()
+    return path
+
+
+
+import matplotlib.pyplot as plt
+import uuid
+import os
+
+def plot_torch_loss(losses, model_name="torch_nn"):
+    """
+    Plots the training loss curve for a PyTorch neural network.
+
+    Args:
+        losses (list of float): List of loss values per epoch.
+        model_name (str): Name of the model/dataset for file naming.
+
+    Returns:
+        str: Path to the saved plot image.
+    """
+    path = f"outputs/{model_name}_loss_{uuid.uuid4().hex}.png"
+    os.makedirs("outputs", exist_ok=True)
+
+    plt.figure(figsize=(8,6))
+    plt.plot(losses, label="Training Loss", color="blue")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.title(f"Training Loss Curve - {model_name}")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(path)
+    plt.close()
+    return path
+
+
+from sklearn.metrics import roc_curve, auc, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+import uuid
+import os
+
+def plot_torch_roc(y_true, y_proba, model_name="torch_nn"):
+    """
+    Plots ROC curve for the PyTorch neural network.
+
+    Args:
+        y_true (array-like): True labels.
+        y_proba (array-like): Predicted probabilities for the positive class.
+        model_name (str): Name of the model/dataset for file naming.
+
+    Returns:
+        str: Path to the saved ROC plot.
+    """
+    fpr, tpr, thresholds = roc_curve(y_true, y_proba)
+    roc_auc = auc(fpr, tpr)
+
+    path = f"outputs/{model_name}_roc_{uuid.uuid4().hex}.png"
+    os.makedirs("outputs", exist_ok=True)
+
+    plt.figure(figsize=(8,6))
+    plt.plot(fpr, tpr, color='blue', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f})')
+    plt.plot([0,1], [0,1], color='gray', lw=1, linestyle='--')
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title(f"ROC Curve - {model_name}")
+    plt.legend(loc="lower right")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(path)
+    plt.close()
+    return path
+
+def plot_torch_confusion_matrix(y_true, y_pred, model_name="torch_nn"):
+    """
+    Plots the confusion matrix for the PyTorch neural network.
+
+    Args:
+        y_true (array-like): True labels.
+        y_pred (array-like): Predicted labels.
+        model_name (str): Name of the model/dataset for file naming.
+
+    Returns:
+        str: Path to the saved confusion matrix plot.
+    """
+    cm = confusion_matrix(y_true, y_pred)
+    path = f"outputs/{model_name}_conf_matrix_{uuid.uuid4().hex}.png"
+    os.makedirs("outputs", exist_ok=True)
+
+    plt.figure(figsize=(6,5))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
+    plt.xlabel("Predicted Label")
+    plt.ylabel("True Label")
+    plt.title(f"Confusion Matrix - {model_name}")
+    plt.tight_layout()
+    plt.savefig(path)
+    plt.close()
+    return path
