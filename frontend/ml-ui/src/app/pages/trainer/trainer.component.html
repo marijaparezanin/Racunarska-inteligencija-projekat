@@ -36,6 +36,82 @@
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <section *ngIf="trainingResult" class="results">
+      <div *ngIf="trainingResult.model == 'DeepOptimizedNN'">
+
+        <p class="info-text">
+          <strong>1. Overview of the Model</strong><br>
+          I implemented a deep feedforward neural network, named <strong>DeepOptimizedNN</strong>, to classify diabetes indicators from structured patient data.
+          This network is designed to handle both numerical and categorical features, capturing complex, non-linear relationships in the dataset.
+          The model was built using PyTorch, which allows flexible layer construction, GPU acceleration, and fine-grained control over training.
+        </p>
+
+        <p class="info-text">
+          <strong>2. Network Architecture</strong><br>
+          The neural network consists of multiple fully connected layers arranged sequentially:
+        </p>
+        <ul>
+          <li><strong>Input Layer:</strong> Receives preprocessed features, scaled to zero mean and unit variance using StandardScaler.</li>
+          <li><strong>Hidden Layers:</strong>
+            <ul>
+              <li>128 neurons: BatchNorm, LeakyReLU, 30% Dropout</li>
+              <li>64 neurons: BatchNorm, ReLU, 25% Dropout</li>
+              <li>32 neurons: BatchNorm, ReLU</li>
+              <li>16 neurons: ReLU only</li>
+            </ul>
+          </li>
+          <li><strong>Output Layer:</strong> Number of neurons equals the number of target classes (binary in this case), producing raw logits for CrossEntropyLoss.</li>
+        </ul>
+        <p class="info-text">
+          Key points: progressively smaller layers compress features, BatchNorm stabilizes learning, and Dropout reduces overfitting.
+        </p>
+
+        <p class="info-text">
+          <strong>3. Data Handling</strong><br>
+          Data is converted to NumPy arrays if needed. For large datasets, a maximum sample size can be enforced. Data is split into 80% training and 20% test sets, stratified by target class. Features are standardized, then wrapped in a TensorDataset and split into 90% training / 10% validation.
+        </p>
+
+        <p class="info-text">
+          <strong>4. Training Procedure</strong><br>
+          The model is trained with AdamW optimizer and CrossEntropyLoss. Mixed-precision training is enabled for GPU acceleration. Training uses a batch size of 256 and early stopping based on validation loss.<br>
+          Steps per batch:
+        </p>
+        <ul>
+          <li>Forward pass</li>
+          <li>Loss computation</li>
+          <li>Gradient backpropagation with scaling</li>
+          <li>Optimizer weight update</li>
+        </ul>
+        <p class="info-text">
+          Average training and validation losses are tracked each epoch.
+        </p>
+
+        <p class="info-text">
+          <strong>5. Evaluation</strong><br>
+          After training, the best-performing model predicts the test set. Evaluation includes:
+        </p>
+        <ul>
+          <li>Accuracy</li>
+          <li>Classification report (precision, recall, F1-score)</li>
+          <li>Visualizations: loss curves and bar plots of predicted vs actual classes</li>
+        </ul>
+        <p class="info-text">
+          Note: raw logits are converted to class predictions using argmax.
+        </p>
+
+        <p class="info-text">
+          <strong>6. Key Advantages</strong><br>
+          Deep architecture captures non-linear patterns. BatchNorm + Dropout ensures robust learning. Mixed-precision training accelerates GPU computation. Early stopping prevents unnecessary epochs. Metrics and visualizations allow interpretation and performance validation.
+        </p>
+
+        <p class="info-text">
+          <strong>7. Takeaways</strong><br>
+          The network encodes complex feature interactions in a compressed representation. Proper preprocessing, stratified splitting, and scaling are critical. Combining deep learning techniques results in accurate and generalizable predictions, while visualizations provide insights for improvements.
+        </p>
+
+      </div>
+
+
+
       <!-- Classification Metrics -->
       <div *ngIf="trainingResult.accuracy !== undefined" class="metrics">
         <p><strong>Accuracy:</strong></p>

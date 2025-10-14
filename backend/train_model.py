@@ -5,6 +5,7 @@ from machine_learning.models.knn import train_and_evaluate_best_knn
 from machine_learning.models.gradient_boosting import train_and_evaluate_best_gb
 from machine_learning.models.mlp import train_and_evaluate_best_mlp
 from machine_learning.models.feedforward import train_and_evaluate_torch_nn
+from machine_learning.models.deep_nn import train_and_evaluate_deep_nn
 
 def train_model(model_type, dataset):
     """
@@ -17,8 +18,8 @@ def train_model(model_type, dataset):
     Returns:
         dict: A dictionary containing the trained model and evaluation metrics.
     """
-    if model_type not in ['rf', 'knn', 'dt', 'gb', 'lr', 'mlp']:
-        return {"error": "Invalid model type. Use 'rf', 'knn', 'mlp', 'gb' or 'lr'."}, 400
+    if model_type not in ['rf', 'knn', 'dt', 'gb', 'lr', 'mlp', 'dnn']:
+        return {"error": "Invalid model type. Use 'rf', 'knn', 'mlp', 'dnn', 'gb' or 'lr'."}, 400
 
     dataset_name = ""
     if dataset == "Diabetes Indicators":
@@ -40,5 +41,6 @@ def train_model(model_type, dataset):
         result = train_and_evaluate_best_mlp(X, y, dataset_name)
     elif model_type == "ff":
         result = train_and_evaluate_torch_nn(X, y, dataset_name)
-
+    elif model_type == "dnn":
+        result = train_and_evaluate_deep_nn(X, y, dataset_name)
     return result
