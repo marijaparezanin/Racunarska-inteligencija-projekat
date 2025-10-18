@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MlApiService } from '../../services/ml-api.service';
 
 interface TrainingResult {
+  model?: string;
   accuracy?: number;
   classification_report: any;
   duration: string;
@@ -19,8 +20,8 @@ interface TrainingResult {
 })
 export class TrainerComponent {
   // Sidebar options
-  clfModels = ['Random Forest', 'K Nearest Neighbors', 'Gradient Boosting', "Multilayer Perceptron (MLP)"];
-  databases = ['Diabetes Indicators', 'Diabetes Prediction'];
+  clfModels = ['Random Forest', 'K Nearest Neighbors', 'Gradient Boosting', "Multilayer Perceptron (MLP)", "Deep NN"];
+  databases = ['Diabetes Indicators'];
 
   classLabels: string[] = ['0', '1', 'macro avg', 'weighted avg'];
 
@@ -41,6 +42,7 @@ export class TrainerComponent {
     'Gradient Boosting': 'gb',
     'Multilayer Perceptron (MLP)': 'mlp',
     'Feed Forward NN': 'ff',
+    'Deep NN': 'dnn'
   };
 
   constructor(private mlApi: MlApiService) {}
@@ -62,6 +64,7 @@ export class TrainerComponent {
     try {
       const data = await this.mlApi.trainModel(payload).toPromise();
       this.trainingResult = data as TrainingResult;
+      console.log(this.trainingResult)
       this.isTraining = false;
       this.trainingMessage = `Training ${label} completed in ${this.trainingResult.duration} seconds.`;
       this.errorMessage = '';

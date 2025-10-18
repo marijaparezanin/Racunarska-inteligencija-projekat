@@ -19,8 +19,8 @@ def train():
         model_type = request.json.get("model")
         dataset = request.json.get("dataset")
 
-        if model_type not in ["rf", "knn", "gb", "mlp", "ff"]:
-            return jsonify({"error": "Invalid model type. Use 'rf', 'mlp', 'knn', 'ff' or 'gb'."}), 400
+        if model_type not in ["rf", "knn", "gb", "mlp", "ff", 'dnn']:
+            return jsonify({"error": "Invalid model type. Use 'rf', 'mlp', 'knn', 'ff', 'dnn' or 'gb'."}), 400
 
 
         if dataset not in ["Diabetes Indicators", "Diabetes Prediction"]:
@@ -49,6 +49,7 @@ def train():
 
         # Prepare response
         response = {
+            "model": result["model"],
             "message": f"{result['model']} model trained successfully",
             "training_time_seconds": duration,
             "accuracy": result["accuracy"],

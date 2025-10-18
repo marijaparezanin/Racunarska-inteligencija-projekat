@@ -41,9 +41,11 @@ ordinal_mappings = {
 }
 
 def load_diabetes_dataset(split='train'):
-    dataset_path = DIABETES_INDICATORS_DATASET + split + ".parquet"
+    dataset_path = f"data/{split}.parquet"
     df = pd.read_parquet(dataset_path)
     return df
+
+
 
 def conditional_map(df, column, mapping):
     if df[column].dtype == object or not pd.api.types.is_numeric_dtype(df[column]):
